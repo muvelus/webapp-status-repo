@@ -1,0 +1,134 @@
+# Engineer Work Platform Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: engineer-work-platform
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  
+  # Security Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            scope: openid,profile,email
+          microsoft:
+            client-id: ${MICROSOFT_CLIENT_ID:your-microsoft-client-id}
+            client-secret: ${MICROSOFT_CLIENT_SECRET:your-microsoft-client-secret}
+            scope: openid,profile,email
+  
+  # Mail Configuration
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Application Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:mySecretKey}
+    expiration: 86400000 # 24 hours
+  
+  # API Integration Configuration
+  integrations:
+    github:
+      base-url: https://api.github.com
+      token: ${GITHUB_TOKEN:your-github-token}
+    
+    slack:
+      base-url: https://slack.com/api
+      token: ${SLACK_TOKEN:your-slack-token}
+    
+    zoom:
+      base-url: https://api.zoom.us/v2
+      client-id: ${ZOOM_CLIENT_ID:your-zoom-client-id}
+      client-secret: ${ZOOM_CLIENT_SECRET:your-zoom-client-secret}
+    
+    teams:
+      base-url: https://graph.microsoft.com/v1.0
+      client-id: ${TEAMS_CLIENT_ID:your-teams-client-id}
+      client-secret: ${TEAMS_CLIENT_SECRET:your-teams-client-secret}
+    
+    jira:
+      base-url: ${JIRA_BASE_URL:https://your-domain.atlassian.net}
+      username: ${JIRA_USERNAME:your-jira-username}
+      token: ${JIRA_TOKEN:your-jira-token}
+    
+    confluence:
+      base-url: ${CONFLUENCE_BASE_URL:https://your-domain.atlassian.net}
+      username: ${CONFLUENCE_USERNAME:your-confluence-username}
+      token: ${CONFLUENCE_TOKEN:your-confluence-token}
+    
+    google:
+      docs-api-url: https://docs.googleapis.com/v1
+      calendar-api-url: https://www.googleapis.com/calendar/v3
+      gmail-api-url: https://gmail.googleapis.com/gmail/v1
+      service-account-key: ${GOOGLE_SERVICE_ACCOUNT_KEY:path-to-service-account-key.json}
+  
+  # Ollama Configuration
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    model: ${OLLAMA_MODEL:llama2:7b-chat}
+  
+  # Scheduling Configuration
+  scheduling:
+    daily-report-time: ${DAILY_REPORT_TIME:18:00}
+    weekly-report-day: ${WEEKLY_REPORT_DAY:FRIDAY}
+    weekly-report-time: ${WEEKLY_REPORT_TIME:17:00}
+
+# Logging Configuration
+logging:
+  level:
+    com.engineerplatform: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/engineer-platform.log
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
