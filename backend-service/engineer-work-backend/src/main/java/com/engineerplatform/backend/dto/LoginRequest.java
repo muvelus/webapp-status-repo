@@ -4,12 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
     
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Username or email is required")
     private String username;
     
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password is required") 
     private String password;
     
+    // Constructors and getters/setters remain the same
     public LoginRequest() {}
     
     public LoginRequest(String username, String password) {
@@ -22,11 +23,4 @@ public class LoginRequest {
     
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-    
-    @Override
-    public String toString() {
-        return "LoginRequest{" +
-                "username='" + username + '\'' +
-                '}';
-    }
 }
