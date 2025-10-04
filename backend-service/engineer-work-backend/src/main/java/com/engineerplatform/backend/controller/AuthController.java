@@ -44,47 +44,47 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         String identifier = loginRequest.getUsername();
         logger.info("Authentication attempt for identifier: {}", identifier);
-    
+        
         try {
             String username = identifier;
-        
-            // Email-to-username conversion logic
-            if (identifier.contains("@")) {
+            
+            // Convert email to username if needed
+            if (identifier != null && identifier.contains("@")) {
                 try {
                     User userByEmail = userService.getUserByEmail(identifier);
                     username = userByEmail.getUsername();
-                    logger.info("Email login detected, converted {} to username: {}", identifier, username);
+                    logger.info("Email login: {} -> username: {}", identifier, username);
                 } catch (Exception e) {
                     logger.warn("Email not found: {}", identifier);
                     return ResponseEntity.badRequest()
                         .body(Map.of("error", "Invalid email or password"));
                 }
             }
-        
+            
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword())
             );
-        
+            
             // Rest of authentication logic...
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userService.getUserByUsername(userDetails.getUsername());
-        
+            
             Map<String, Object> claims = new HashMap<>();
             claims.put("userId", user.getId());
             claims.put("role", user.getRole().name());
             claims.put("email", user.getEmail());
-        
+            
             String jwt = jwtUtil.generateToken(userDetails, claims);
             userService.updateLastLogin(user.getUsername());
-        
+            
             return ResponseEntity.ok(new JwtResponse(
                 jwt, user.getId(), user.getUsername(), 
                 user.getEmail(), user.getRole().name(), 
                 jwtUtil.getExpirationTime()
             ));
-        
+            
         } catch (Exception e) {
-            logger.error("Authentication failed for identifier {}: {}", identifier, e.getMessage());
+            logger.error("Authentication failed for {}: {}", identifier, e.getMessage());
             return ResponseEntity.badRequest()
                 .body(Map.of("error", "Invalid email or password"));
         }
