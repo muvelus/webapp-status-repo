@@ -42,43 +42,51 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        logger.info("Authentication attempt for user: {}", loginRequest.getUsername());
-        
+        String identifier = loginRequest.getUsername();
+        logger.info("Authentication attempt for identifier: {}", identifier);
+    
         try {
+            String username = identifier;
+        
+            // Email-to-username conversion logic
+            if (identifier.contains("@")) {
+                try {
+                    User userByEmail = userService.getUserByEmail(identifier);
+                    username = userByEmail.getUsername();
+                    logger.info("Email login detected, converted {} to username: {}", identifier, username);
+                } catch (Exception e) {
+                    logger.warn("Email not found: {}", identifier);
+                    return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Invalid email or password"));
+                }
+            }
+        
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
-                )
+                new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword())
             );
-            
+        
+            // Rest of authentication logic...
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userService.getUserByUsername(userDetails.getUsername());
-            
+        
             Map<String, Object> claims = new HashMap<>();
             claims.put("userId", user.getId());
             claims.put("role", user.getRole().name());
             claims.put("email", user.getEmail());
-            
+        
             String jwt = jwtUtil.generateToken(userDetails, claims);
-            
             userService.updateLastLogin(user.getUsername());
-            
-            logger.info("Successful authentication for user: {}", loginRequest.getUsername());
-            
+        
             return ResponseEntity.ok(new JwtResponse(
-                jwt,
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole().name(),
+                jwt, user.getId(), user.getUsername(), 
+                user.getEmail(), user.getRole().name(), 
                 jwtUtil.getExpirationTime()
             ));
-            
+        
         } catch (Exception e) {
-            logger.error("Authentication failed for user {}: {}", loginRequest.getUsername(), e.getMessage());
+            logger.error("Authentication failed for identifier {}: {}", identifier, e.getMessage());
             return ResponseEntity.badRequest()
-                .body(Map.of("error", "Invalid username or password"));
+                .body(Map.of("error", "Invalid email or password"));
         }
     }
     
