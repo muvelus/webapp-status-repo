@@ -4,8 +4,6 @@ server:
     context-path: /api
 
 spring:
-  profiles:
-    active: prod
   datasource:
     url: jdbc:postgresql://localhost:5432/engineerplatform_db
     username: engineerplatform
