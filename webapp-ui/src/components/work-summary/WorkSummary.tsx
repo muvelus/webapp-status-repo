@@ -14,7 +14,6 @@ import {
   GitBranch, 
   MessageSquare, 
   FileText,
-  Users,
   TrendingUp,
   Clock
 } from 'lucide-react'

@@ -7,15 +7,13 @@ import { Badge } from '../ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Progress } from '../ui/progress'
 import { Avatar, AvatarFallback } from '../ui/avatar'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import { 
   Users, 
   TrendingUp, 
   Calendar, 
-  FileText, 
   Activity,
-  Download,
-  RefreshCw
+  Download
 } from 'lucide-react'
 import { User, WorkSummary, MeetingMinutes, TimeFilter } from '../../types'
 import { apiClient } from '../../utils/api'
