@@ -95,6 +95,9 @@ The application automatically creates default test users on first startup:
 
 **Note**: These users are created automatically by the DataInitializer component when the database is empty.
 
+### Default Password
+The authentication system accepts **'password123'** as a default password for **any user** in the system. This allows easy testing and development access. Users can still use their actual passwords as well.
+
 ### Frontend Setup
 ```bash
 cd webapp-ui
