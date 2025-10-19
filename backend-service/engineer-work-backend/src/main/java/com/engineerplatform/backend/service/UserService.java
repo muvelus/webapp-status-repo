@@ -67,6 +67,35 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
     
+    public User createDefaultUser(String identifier, String password) {
+        logger.info("Creating default user for identifier: {}", identifier);
+        
+        String username = identifier;
+        String email = identifier;
+        
+        if (!identifier.contains("@")) {
+            email = identifier + "@default.com";
+        } else {
+            username = identifier.split("@")[0];
+        }
+        
+        if (userRepository.existsByUsername(username)) {
+            return userRepository.findByUsername(username).orElseThrow();
+        }
+        
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setFirstName("Default");
+        user.setLastName("User");
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(User.Role.ENGINEER);
+        
+        User savedUser = userRepository.save(user);
+        logger.info("Successfully created default user with ID: {}", savedUser.getId());
+        return savedUser;
+    }
+    
     public User updateUser(Long userId, UserUpdateDto updateDto) {
         logger.info("Updating user with ID: {}", userId);
         

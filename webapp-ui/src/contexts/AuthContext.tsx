@@ -46,13 +46,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await apiClient.post<{ token: string; user: User }>('/api/auth/login', {
-        email,
+      const response = await apiClient.post<{ 
+        token: string; 
+        id: number;
+        username: string;
+        email: string;
+        role: string;
+        type?: string;
+        expiresIn?: number;
+      }>('/api/auth/login', {
+        username: email,
         password,
       })
       
       apiClient.setToken(response.token)
-      setUser(response.user)
+      
+      const user: User = {
+        id: response.id,
+        username: response.username,
+        email: response.email,
+        firstName: 'Default',
+        lastName: 'User',
+        role: (response.role === 'ENGINEER' ? 'USER' : response.role) as 'USER' | 'MANAGER' | 'LEADER' | 'ADMIN',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      
+      setUser(user)
       toast.success('Login successful!')
     } catch (error) {
       toast.error('Login failed. Please check your credentials.')
