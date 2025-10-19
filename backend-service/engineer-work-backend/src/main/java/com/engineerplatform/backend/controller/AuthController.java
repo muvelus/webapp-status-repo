@@ -49,7 +49,6 @@ public class AuthController {
             String username = identifier;
             User user = null;
             
-            // Convert email to username if needed
             if (identifier != null && identifier.contains("@")) {
                 try {
                     user = userService.getUserByEmail(identifier);
