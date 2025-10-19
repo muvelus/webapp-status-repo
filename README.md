@@ -84,6 +84,17 @@ mvn clean install
 mvn spring-boot:run
 ```
 
+### Default Test Users
+The application automatically creates default test users on first startup:
+
+| Username | Password | Role | Email |
+|----------|----------|------|-------|
+| admin | password123 | ADMIN | admin@example.com |
+| testuser | password123 | ENGINEER | testuser@example.com |
+| manager | password123 | MANAGER | manager@example.com |
+
+**Note**: These users are created automatically by the DataInitializer component when the database is empty.
+
 ### Frontend Setup
 ```bash
 cd webapp-ui
