@@ -248,8 +248,10 @@ server {
     }
     
     # Backend API
+    # Note: Backend already has context-path: /api configured
+    # So we proxy /api/ to http://localhost:8080 (not /api/)
     location /api/ {
-        proxy_pass http://localhost:8080/api/;
+        proxy_pass http://localhost:8080;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
