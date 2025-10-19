@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import { Toaster } from 'sonner'
 import LoginPage from './components/auth/LoginPage'
 import Dashboard from './components/dashboard/Dashboard'
