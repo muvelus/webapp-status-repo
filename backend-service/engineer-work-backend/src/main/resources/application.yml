@@ -59,7 +59,7 @@ spring:
 # Application Configuration
 app:
   jwt:
-    secret: ${JWT_SECRET:mySecretKey}
+    secret: ${JWT_SECRET:aVerySecureAndLongSecretKeyThatIsAtLeast256BitsLongForJWTSigning1234567890}
     expiration: 86400000 # 24 hours
   
   # API Integration Configuration
